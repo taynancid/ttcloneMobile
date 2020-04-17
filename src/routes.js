@@ -2,12 +2,15 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
 
 import Main from './pages/Main';
 import User from './pages/User';
 import Login from './pages/Login';
 
 const Routes = () => {
+  const {logged} = useSelector(state => state.auth);
+
   const AuthStack = createStackNavigator();
   const AuthStackComponent = () => (
     <AuthStack.Navigator>
@@ -25,7 +28,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      <AuthStackComponent />
+      {logged ? <MainStackComponent /> : <AuthStackComponent />}
     </NavigationContainer>
   );
 };

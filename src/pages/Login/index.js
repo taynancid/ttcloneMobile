@@ -1,25 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import {StatusBar, Text} from 'react-native';
+import {StatusBar, Text, ActivityIndicator} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Container, Logo, Input, LoginButton} from './styles';
 
-import {useSelector} from 'react-redux';
-
 import api from '../../services/api';
+import authActions from '../../store/actions/auth';
 
 export default function Login({navigation}) {
-  const auth = useSelector(state => state.auth);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const login = async () => {
+  const dispatch = useDispatch();
+
+  const handleLogIn = async () => {
     try {
-      const response = await api.post('/api/v1/login', {
+      setLoading(true);
+      const {data} = await api.post('login', {
         email,
         password,
       });
-      console.log(response.data);
+
+      await AsyncStorage.setItem('@ttclone:token', data.access_token.token);
+      dispatch(authActions.logIn());
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -52,8 +59,8 @@ export default function Login({navigation}) {
         autoCorrect={false}
         secureTextEntry
       />
-      <LoginButton onPress={login}>
-        <Text>Login</Text>
+      <LoginButton onPress={handleLogIn}>
+        {loading ? <ActivityIndicator /> : <Text>Login</Text>}
       </LoginButton>
     </Container>
   );

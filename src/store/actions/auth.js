@@ -1,7 +1,12 @@
-import axios from 'axios';
-import {API_URL} from 'react-native-dotenv';
-
-export const setAuth = data => ({
-  type: 'SET_AUTH',
-  payload: {data},
+export const logIn = data => ({
+  type: 'LOGIN',
 });
+
+export const logOut = data => ({
+  type: 'LOGOUT',
+});
+
+export default {
+  logIn,
+  logOut,
+};
