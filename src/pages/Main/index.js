@@ -4,7 +4,8 @@ import Text from '../../components/Text';
 import {Container} from './styles';
 
 import api from '../../services/api';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, FlatList} from 'react-native';
+import TweetContainer from '../../components/TweetContainer';
 
 // import { Container } from './styles';
 
@@ -31,13 +32,11 @@ export default function Main(props) {
 
   return (
     <Container>
-      <ScrollView>
-        {tweets.length !== 0 ? (
-          tweets.map(tweet => <Text>{tweet.text}</Text>)
-        ) : (
-          <Text>no tweets</Text>
-        )}
-      </ScrollView>
+      <FlatList
+        data={tweets}
+        renderItem={tweet => <TweetContainer tweet={tweet} />}
+        keyExtractor={item => item.id}
+      />
     </Container>
   );
 }
