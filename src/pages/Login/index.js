@@ -6,6 +6,7 @@ import {Container, Logo, Input, LoginButton} from './styles';
 
 import api from '../../services/api';
 import authActions from '../../store/actions/auth';
+import userActions from '../../store/actions/user';
 
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
@@ -24,6 +25,8 @@ export default function Login({navigation}) {
 
       await AsyncStorage.setItem('@ttclone:token', data.access_token.token);
       dispatch(authActions.logIn());
+      console.log(data.user);
+      dispatch(userActions.setUser(data.user));
       setLoading(false);
     } catch (e) {
       setLoading(false);
