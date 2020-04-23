@@ -25,7 +25,6 @@ export default function Login({navigation}) {
 
       await AsyncStorage.setItem('@ttclone:token', data.access_token.token);
       dispatch(authActions.logIn());
-      console.log(data.user);
       dispatch(userActions.setUser(data.user));
       setLoading(false);
     } catch (e) {
