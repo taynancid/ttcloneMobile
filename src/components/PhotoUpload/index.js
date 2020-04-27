@@ -1,93 +1,36 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
-import {useActionSheet} from '@expo/react-native-action-sheet';
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import i18n from 'i18n-js';
+import ImagePicker from 'react-native-image-picker';
 
-const MAX_IMAGE_HEIGHT = 6000;
+// More info on all the options is below in the API Reference... just some common use cases shown here
+const options = {
+  title: 'Select Avatar',
+  customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
 
-function PhotoUpload(props) {
-  const {showActionSheetWithOptions} = useActionSheet();
-  const [image, setImage] = useState(null);
+/**
+ * The first arg is the options object for customization (it can also be null or omitted for default options),
+ * The second arg is the callback which sends object: response (more info in the API Reference)
+ */
+ImagePicker.showImagePicker(options, response => {
+  console.log('Response = ', response);
 
-  const askPermissionsAsync = async () => {
-    await Permissions.askAsync(Permissions.CAMERA);
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  };
+  if (response.didCancel) {
+    console.log('User cancelled image picker');
+  } else if (response.error) {
+    console.log('ImagePicker Error: ', response.error);
+  } else if (response.customButton) {
+    console.log('User tapped custom button: ', response.customButton);
+  } else {
+    const source = {uri: response.uri};
 
-  const resizeImage = async image => {
-    return await ImageManipulator.manipulateAsync(image.uri, [
-      {resize: {height: MAX_IMAGE_HEIGHT}},
-    ]);
-  };
+    // You can also display the image using data:
+    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-  const launchCamera = async () => {
-    await askPermissionsAsync();
-
-    let result = await ImagePicker.launchCameraAsync({
-      aspect: [4, 3],
+    this.setState({
+      avatarSource: source,
     });
-
-    if (!result.cancelled) {
-      const newImage =
-        result.height > MAX_IMAGE_HEIGHT ? await resizeImage(result) : result;
-
-      setImage(newImage.uri);
-      addImage(newImage);
-    }
-  };
-
-  const launchLibrary = async () => {
-    await askPermissionsAsync();
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      aspect: [4, 3],
-    });
-
-    if (!result.cancelled) {
-      const newImage =
-        result.height > MAX_IMAGE_HEIGHT ? await resizeImage(result) : result;
-
-      setImage(newImage.uri);
-      addImage(newImage);
-    }
-  };
-
-  const addImage = newImage => {
-    props.onAddImage(newImage.uri);
-  };
-
-  const _onOpenActionSheet = () => {
-    const options = ['CANCEL', 'From Library', 'From Camera'];
-    const cancelButtonIndex = 0;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      buttonIndex => {
-        switch (buttonIndex) {
-          case 1:
-            launchLibrary();
-            break;
-          case 2:
-            launchCamera();
-            break;
-        }
-      },
-    );
-  };
-
-  return (
-    <View>
-      {React.Children.map(props.children, (child, i) => {
-        return React.cloneElement(child, {onPress: () => _onOpenActionSheet()});
-      })}
-    </View>
-  );
-}
-
-export default PhotoUpload;
+  }
+});

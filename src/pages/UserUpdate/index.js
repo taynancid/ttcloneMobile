@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Image, TextInput, Text, TouchableOpacity} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import BackArrowButton from '../../components/BackArrowButton';
 import ImagePicker from 'react-native-image-picker';
+import api from '../../services/api';
 
-// import { Container } from './styles';
+import userActions from '../../store/actions/user';
 
 const BLUE = '#428AF8';
 const LIGHT_GRAY = '#D3D3D3';
@@ -13,6 +14,9 @@ export default function UserUpdate(props) {
   const {user} = useSelector(state => state);
   const [username, setUsername] = useState(user.data.username);
   const [avatarURI, setAvatarURI] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const navigationOptions = ({navigation}) => {
     return {
@@ -23,14 +27,23 @@ export default function UserUpdate(props) {
         shadowColor: 0,
       },
       headerTitle: 'Edit Profile',
-      headerRight: () => <Text>Salvar</Text>,
+      headerRight: () => (
+        <>
+          {!isLoading ? (
+            <TouchableOpacity
+              onPress={() => handleUpdate()}
+              style={{marginRight: 10}}>
+              <Text>Salvar</Text>
+            </TouchableOpacity>
+          ) : null}
+        </>
+      ),
     };
   };
 
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
-    console.log(user);
-  }, [props, user]);
+  }, [navigationOptions, props, user, isLoading]);
 
   const chooseFile = () => {
     var options = {
@@ -60,6 +73,31 @@ export default function UserUpdate(props) {
         setAvatarURI(source.uri);
       }
     });
+  };
+
+  const handleUpdate = async () => {
+    try {
+      setIsLoading(true);
+
+      const body = new FormData();
+
+      body.append('username', username);
+
+      if (avatarURI) {
+        body.append('profile_pic', {
+          name: 'picture.jpg',
+          uri: avatarURI,
+        });
+      }
+
+      const {data} = await api.put('users', body);
+      console.log(data);
+      //dispatch(userActions.setUser(data.user));
+      setIsLoading(false);
+    } catch (e) {
+      setIsLoading(false);
+      console.log(e);
+    }
   };
 
   return (
