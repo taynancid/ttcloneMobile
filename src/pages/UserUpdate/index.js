@@ -1,10 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {View, Image, TextInput, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Image,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  ActivityIndicator,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import BackArrowButton from '../../components/BackArrowButton';
 import ImagePicker from 'react-native-image-picker';
 import api from '../../services/api';
-
+import BackArrowButton from '../../components/BackArrowButton';
+import MaterialIconsIcons from 'react-native-vector-icons/MaterialIcons';
 import userActions from '../../store/actions/user';
 
 const BLUE = '#428AF8';
@@ -13,7 +21,9 @@ const LIGHT_GRAY = '#D3D3D3';
 export default function UserUpdate(props) {
   const {user} = useSelector(state => state);
   const [username, setUsername] = useState(user.data.username);
+  const [bio, setBio] = useState(user.data.bio);
   const [avatarURI, setAvatarURI] = useState(null);
+  const [coverURI, setCoverURI] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -28,15 +38,15 @@ export default function UserUpdate(props) {
       },
       headerTitle: 'Edit Profile',
       headerRight: () => (
-        <>
+        <View style={{marginRight: 10}}>
           {!isLoading ? (
-            <TouchableOpacity
-              onPress={() => handleUpdate()}
-              style={{marginRight: 10}}>
+            <TouchableOpacity onPress={() => handleUpdate()}>
               <Text>Salvar</Text>
             </TouchableOpacity>
-          ) : null}
-        </>
+          ) : (
+            <ActivityIndicator />
+          )}
+        </View>
       ),
     };
   };
@@ -45,7 +55,7 @@ export default function UserUpdate(props) {
     props.navigation.setOptions(navigationOptions(props));
   }, [navigationOptions, props, user, isLoading]);
 
-  const chooseFile = () => {
+  const chooseFile = addPicture => {
     var options = {
       title: 'Select Image',
       customButtons: [
@@ -68,9 +78,7 @@ export default function UserUpdate(props) {
         alert(response.customButton);
       } else {
         let source = response;
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        setAvatarURI(source.uri);
+        addPicture(source.uri);
       }
     });
   };
@@ -82,11 +90,21 @@ export default function UserUpdate(props) {
       const body = new FormData();
 
       body.append('username', username);
+      if (bio) {
+        body.append('bio', bio);
+      }
 
       if (avatarURI) {
         body.append('profile_pic', {
-          name: 'picture.jpg',
+          name: `avatar-${new Date()}.jpg`,
           uri: avatarURI,
+        });
+      }
+
+      if (coverURI) {
+        body.append('cover_pic', {
+          name: `cover-${new Date()}.jpg`,
+          uri: coverURI,
         });
       }
 
@@ -103,28 +121,67 @@ export default function UserUpdate(props) {
   return (
     <View flex={1}>
       <View>
-        <TouchableOpacity onPress={chooseFile}>
-          <Image
+        <TouchableOpacity onPress={() => chooseFile(setCoverURI)}>
+          <View
             style={{
               width: '100%',
               height: 120,
-            }}
-            source={{uri: avatarURI ? avatarURI : user.data?.cover_url}}
-          />
+            }}>
+            <ImageBackground
+              style={{
+                width: '100%',
+                height: 120,
+                backgroundColor: 'rgb(0,0,0)',
+              }}
+              imageStyle={{opacity: 0.4}}
+              source={{uri: coverURI ? coverURI : user.data?.full_cover_url}}>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  top: 50,
+                }}>
+                <MaterialIconsIcons
+                  name="add-a-photo"
+                  size={26}
+                  color="white"
+                />
+              </View>
+            </ImageBackground>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{position: 'absolute', left: 10, top: 80}}
-          onPress={chooseFile}>
-          <Image
+          style={{
+            position: 'absolute',
+            left: 10,
+            top: 80,
+            backgroundColor: 'white',
+            borderRadius: 50,
+          }}
+          onPress={() => chooseFile(setAvatarURI)}>
+          <ImageBackground
             style={{
-              borderRadius: 50,
               width: 80,
               height: 80,
+              borderRadius: 50,
+              backgroundColor: 'rgb(0,0,0)',
+            }}
+            imageStyle={{
+              borderRadius: 50,
               borderWidth: 4,
               borderColor: 'white',
+              opacity: 0.4,
             }}
-            source={{uri: avatarURI ? avatarURI : user.data?.avatar_url}}
-          />
+            source={{uri: avatarURI ? avatarURI : user.data?.avatar_url}}>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                top: 25,
+              }}>
+              <MaterialIconsIcons name="add-a-photo" size={26} color="white" />
+            </View>
+          </ImageBackground>
         </TouchableOpacity>
       </View>
 
@@ -148,6 +205,26 @@ export default function UserUpdate(props) {
               borderBottomWidth: 1,
               borderBottomColor: BLUE,
             }}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            paddingHorizontal: 10,
+          }}>
+          <Text>Bio</Text>
+          <TextInput
+            value={bio}
+            placeholder="Add a bio"
+            onChangeText={setBio}
+            selectionColor={BLUE}
+            style={{
+              height: 80,
+              borderBottomWidth: 1,
+              borderBottomColor: BLUE,
+            }}
+            multiline={true}
+            numberOfLines={5}
           />
         </View>
       </View>
