@@ -8,8 +8,11 @@ import {
   ImageBackground,
   ActivityIndicator,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import {useSelector, useDispatch} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
+import moment from 'moment';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import api from '../../services/api';
 import BackArrowButton from '../../components/BackArrowButton';
 import MaterialIconsIcons from 'react-native-vector-icons/MaterialIcons';
@@ -22,6 +25,10 @@ export default function UserUpdate(props) {
   const {user} = useSelector(state => state);
   const [username, setUsername] = useState(user.data.username);
   const [bio, setBio] = useState(user.data.bio);
+  const [birth, setBirth] = useState(
+    user.data?.birth ? user.data?.birth : null,
+  );
+  const [birthModalVisible, setBirthModalVisible] = useState(false);
   const [avatarURI, setAvatarURI] = useState(null);
   const [coverURI, setCoverURI] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,6 +89,11 @@ export default function UserUpdate(props) {
         addPicture(source.uri);
       }
     });
+  };
+
+  const handleSetBirth = value => {
+    setBirth(value);
+    setBirthModalVisible(false);
   };
 
   const handleUpdate = async () => {
@@ -210,7 +222,7 @@ export default function UserUpdate(props) {
         </View>
         <View
           style={{
-            marginTop: 10,
+            marginTop: 15,
             paddingHorizontal: 10,
           }}>
           <Text>Bio</Text>
@@ -228,7 +240,49 @@ export default function UserUpdate(props) {
             numberOfLines={5}
           />
         </View>
+        <DateTimePickerModal
+          isVisible={birthModalVisible}
+          mode="date"
+          onConfirm={handleSetBirth}
+          onCancel={() => setBirthModalVisible(false)}
+        />
+        <View
+          style={{
+            marginTop: 15,
+            paddingHorizontal: 10,
+          }}>
+          <Text>Birth date</Text>
+          <TouchableOpacity onPress={() => setBirthModalVisible(true)}>
+            {birth ? (
+              <Text>{moment(birth).format('L')}</Text>
+            ) : (
+              <Text>click me</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 }
+
+// centeredView: {
+//   flex: 1,
+//   justifyContent: "center",
+//   alignItems: "center",
+//   marginTop: 22
+// },
+// modalView: {
+//   margin: 20,
+//   backgroundColor: "white",
+//   borderRadius: 20,
+//   padding: 35,
+//   alignItems: "center",
+//   shadowColor: "#000",
+//   shadowOffset: {
+//     width: 0,
+//     height: 2
+//   },
+//   shadowOpacity: 0.25,
+//   shadowRadius: 3.84,
+//   elevation: 5
+// },
