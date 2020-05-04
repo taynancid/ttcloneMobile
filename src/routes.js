@@ -37,11 +37,11 @@ const Routes = () => {
   const UserProfileStack = createStackNavigator();
   const UserProfileStackComponent = () => (
     <UserProfileStack.Navigator>
-      <UserProfileStack.Screen name="UserUpdateScreen" component={UserUpdate} />
       <UserProfileStack.Screen
         name="UserTimelineScreen"
         component={UserTimeline}
       />
+      <UserProfileStack.Screen name="UserUpdateScreen" component={UserUpdate} />
     </UserProfileStack.Navigator>
   );
 

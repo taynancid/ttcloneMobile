@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Image,
@@ -26,34 +26,35 @@ export default function UserUpdate(props) {
   const [coverURI, setCoverURI] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const navigationOptions = ({navigation}) => {
-    return {
-      headerLeft: () => <BackArrowButton />,
-      headerStyle: {
-        elevation: 0, //remove shadow on Android
-        borderBottomWidth: 0, //remove shadow on iOS
-        shadowColor: 0,
-      },
-      headerTitle: 'Edit Profile',
-      headerRight: () => (
-        <View style={{marginRight: 10}}>
-          {!isLoading ? (
-            <TouchableOpacity onPress={() => handleUpdate()}>
-              <Text>Salvar</Text>
-            </TouchableOpacity>
-          ) : (
-            <ActivityIndicator />
-          )}
-        </View>
-      ),
-    };
-  };
+  const navigationOptions = useCallback(
+    ({navigation}) => {
+      return {
+        headerLeft: () => <BackArrowButton onPress={navigation.goBack} />,
+        headerStyle: {
+          elevation: 0, //remove shadow on Android
+          borderBottomWidth: 0, //remove shadow on iOS
+          shadowColor: 0,
+        },
+        headerTitle: 'Edit Profile',
+        headerRight: () => (
+          <View style={{marginRight: 10}}>
+            {!isLoading ? (
+              <TouchableOpacity onPress={() => handleUpdate()}>
+                <Text>Salvar</Text>
+              </TouchableOpacity>
+            ) : (
+              <ActivityIndicator />
+            )}
+          </View>
+        ),
+      };
+    },
+    [handleUpdate, isLoading],
+  );
 
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
-  }, [navigationOptions, props, user, isLoading]);
+  }, [props, user, isLoading, navigationOptions]);
 
   const chooseFile = addPicture => {
     var options = {
