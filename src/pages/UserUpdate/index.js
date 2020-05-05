@@ -24,9 +24,10 @@ const LIGHT_GRAY = '#D3D3D3';
 export default function UserUpdate(props) {
   const {user} = useSelector(state => state);
   const [username, setUsername] = useState(user.data.username);
+  const [name, setName] = useState(user.data.name);
   const [bio, setBio] = useState(user.data.bio);
   const [birth, setBirth] = useState(
-    user.data?.birth ? user.data?.birth : null,
+    user.data?.birthday_date ? user.data?.birthday_date : null,
   );
   const [birthModalVisible, setBirthModalVisible] = useState(false);
   const [avatarURI, setAvatarURI] = useState(null);
@@ -103,8 +104,16 @@ export default function UserUpdate(props) {
       const body = new FormData();
 
       body.append('username', username);
+
+      if (name) {
+        body.append('name', name);
+      }
       if (bio) {
         body.append('bio', bio);
+      }
+      if (birth) {
+        body.append('birthday_date', moment(birth).format('LL'));
+        console.log(body);
       }
 
       if (avatarURI) {
@@ -207,11 +216,29 @@ export default function UserUpdate(props) {
             marginTop: 10,
             paddingHorizontal: 10,
           }}>
-          <Text>Name</Text>
+          <Text>Username</Text>
           <TextInput
             value={username}
             placeholder="Cannot be blank"
             onChangeText={setUsername}
+            selectionColor={BLUE}
+            style={{
+              height: 40,
+              borderBottomWidth: 1,
+              borderBottomColor: BLUE,
+            }}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            paddingHorizontal: 10,
+          }}>
+          <Text>Name</Text>
+          <TextInput
+            value={name}
+            placeholder="Cannot be blank"
+            onChangeText={setName}
             selectionColor={BLUE}
             style={{
               height: 40,
@@ -252,11 +279,19 @@ export default function UserUpdate(props) {
             paddingHorizontal: 10,
           }}>
           <Text>Birth date</Text>
-          <TouchableOpacity onPress={() => setBirthModalVisible(true)}>
+          <TouchableOpacity
+            onPress={() => setBirthModalVisible(true)}
+            style={{
+              height: 40,
+              borderBottomColor: BLUE,
+              borderBottomWidth: 1,
+              justifyContent: 'flex-end',
+              paddingVertical: 10,
+            }}>
             {birth ? (
               <Text>{moment(birth).format('L')}</Text>
             ) : (
-              <Text>click me</Text>
+              <Text>add a date</Text>
             )}
           </TouchableOpacity>
         </View>

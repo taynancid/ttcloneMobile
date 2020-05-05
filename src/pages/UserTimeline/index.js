@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import UserTimelineHeader from './UserTimelineHeader';
+import moment from 'moment';
 
 // import { Container } from './styles';
 
@@ -25,7 +26,7 @@ export default function UserTimeline(props) {
       <UserTimelineHeader {...props} />
       <View style={{paddingTop: 5, paddingLeft: 10}}>
         <Text style={{fontWeight: 'bold', fontSize: 20}}>
-          {user.data.username}
+          {user.data.name ? user.data.name : user.data.username}
         </Text>
         <Text style={{fontSize: 15, color: 'gray', marginTop: 3}}>
           @{user.data.username}
@@ -39,11 +40,17 @@ export default function UserTimeline(props) {
         </View>
         <View flexDirection="row" alignItems="center" marginTop={10}>
           <FontAwesomeIcons name="birthday-cake" size={15} color="gray" />
-          <Text style={{fontSize: 15, color: 'gray'}}> {user.data.bio}</Text>
+          <Text style={{fontSize: 15, color: 'gray'}}>
+            {' '}
+            {moment(user.data.birthday_date).format('LL')}
+          </Text>
         </View>
         <View flexDirection="row" alignItems="center" marginTop={10}>
           <FontAwesomeIcons name="calendar" size={15} color="gray" />
-          <Text style={{fontSize: 15, color: 'gray'}}> {user.data.bio}</Text>
+          <Text style={{fontSize: 15, color: 'gray'}}>
+            {' '}
+            Member since {moment(user.data.created_at).format('MMMM YYYY')}
+          </Text>
         </View>
         <View flexDirection="row" alignItems="center" marginTop={10}>
           <Text style={{fontSize: 15, fontWeight: 'bold'}}>100</Text>
