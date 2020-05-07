@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {StatusBar, Text, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -14,6 +14,27 @@ export default function Login({navigation}) {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    checkIfHasToken();
+  }, [checkIfHasToken]);
+
+  const checkIfHasToken = useCallback(async () => {
+    const token = await AsyncStorage.getItem('@ttclone:token');
+
+    if (token) {
+      try {
+        setLoading(true);
+        const {data} = await api.get('loggedUserInfo');
+        dispatch(authActions.logIn());
+        dispatch(userActions.setUser(data.user));
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        console.log(e);
+      }
+    }
+  }, [dispatch]);
 
   const handleLogIn = async () => {
     try {
