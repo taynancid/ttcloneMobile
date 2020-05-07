@@ -47,13 +47,14 @@ export default function Main(props) {
             bottom: 0,
             right: 0,
             borderRadius: 50,
-          }}>
+          }}
+          onPress={() => props.navigation.navigate('AddTweetScreen')}>
           <View
             style={{
               width: 60,
               height: 60,
               borderRadius: 50,
-              backgroundColor: 'rgb(29, 161, 242)',
+              backgroundColor: '#1DA1F2',
               margin: 10,
               alignItems: 'center',
               justifyContent: 'center',
