@@ -1,12 +1,37 @@
-import React, {useState} from 'react';
-import {View, Text, SafeAreaView, TouchableOpacity, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
 import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5';
 import {useSelector, useDispatch} from 'react-redux';
-import {TextInput} from 'react-native-gesture-handler';
+import api from '../../services/api';
+import tweetListActions from '../../store/actions/tweetList';
 
 const AddTweet = props => {
   const user = useSelector(state => state.user);
   const [tweetText, setTweetText] = useState('');
+  const [createLoading, setCreateLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleCreateTweet = async () => {
+    try {
+      setCreateLoading(true);
+      const {data} = await api.post('tweets', {text: tweetText});
+      dispatch(tweetListActions.fetchTweets());
+      props.navigation.goBack();
+      setCreateLoading(false);
+    } catch (e) {
+      setCreateLoading(false);
+      console.log(e);
+    }
+  };
 
   return (
     <View style={{backgroundColor: '#243447', flex: 1}}>
@@ -18,7 +43,9 @@ const AddTweet = props => {
           alignItems: 'center',
           paddingHorizontal: 10,
         }}>
-        <FontAwesome5Icons name="times" size={25} color={'#1DA1F2'} />
+        <TouchableOpacity onPress={() => props.navigation.goBack()}>
+          <FontAwesome5Icons name="times" size={25} color={'#1DA1F2'} />
+        </TouchableOpacity>
         <TouchableOpacity
           style={{
             backgroundColor: '#1DA1F2',
@@ -26,8 +53,13 @@ const AddTweet = props => {
             paddingVertical: 7,
             paddingHorizontal: 11,
           }}
-          onPress={() => console.log('todo')}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>Tweet</Text>
+          onPress={() => handleCreateTweet()}
+          disabled={createLoading || tweetText === ''}>
+          {createLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{fontWeight: 'bold', color: 'white'}}>Tweet</Text>
+          )}
         </TouchableOpacity>
       </View>
       <View
@@ -54,8 +86,9 @@ const AddTweet = props => {
           <TextInput
             style={{width: '100%', color: 'white', fontSize: 20}}
             value={tweetText}
-            onChange={setTweetText}
+            onChangeText={setTweetText}
             multiline={true}
+            autoFocus={true}
           />
         </View>
       </View>

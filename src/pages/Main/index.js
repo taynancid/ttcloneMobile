@@ -1,41 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import Text from '../../components/Text';
-import {Container} from './styles';
-
-import api from '../../services/api';
 import {ScrollView, FlatList} from 'react-native';
+
+import {Container} from './styles';
+import Text from '../../components/Text';
+import api from '../../services/api';
 import TweetContainer from '../../components/TweetContainer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import tweetListActions from '../../store/actions/tweetList';
+import {useDispatch, useSelector} from 'react-redux';
 
 // import { Container } from './styles';
 
 export default function Main(props) {
-  const [loading, setLoading] = useState(false);
-  const [tweets, setTweets] = useState([]);
+  const {tweetList, tweetListLoading} = useSelector(state => state.tweetList);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    loadTweets();
-  }, []);
-
-  const loadTweets = async () => {
-    try {
-      setLoading(true);
-      const {data} = await api.get('tweets', {});
-
-      setTweets([...data]);
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-    }
-  };
+    dispatch(tweetListActions.fetchTweets());
+  }, [dispatch]);
 
   return (
     <>
       <Container>
         <FlatList
-          data={tweets}
+          data={tweetList}
+          onRefresh={() => dispatch(tweetListActions.fetchTweets())}
+          refreshing={tweetListLoading}
           renderItem={tweet => <TweetContainer tweet={tweet} />}
           keyExtractor={item => item.id}
         />
