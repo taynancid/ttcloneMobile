@@ -42,13 +42,14 @@ export default function UserUpdate(props) {
           elevation: 0, //remove shadow on Android
           borderBottomWidth: 0, //remove shadow on iOS
           shadowColor: 0,
+          backgroundColor: '#243447',
         },
-        headerTitle: 'Edit Profile',
+        headerTitle: <Text style={{color: 'white'}}>Edit Profile</Text>,
         headerRight: () => (
           <View style={{marginRight: 10}}>
             {!isLoading ? (
               <TouchableOpacity onPress={() => handleUpdate()}>
-                <Text>Salvar</Text>
+                <Text style={{color: 'white'}}>Salvar</Text>
               </TouchableOpacity>
             ) : (
               <ActivityIndicator />
@@ -141,7 +142,7 @@ export default function UserUpdate(props) {
   };
 
   return (
-    <View flex={1}>
+    <View style={{flex: 1, backgroundColor: '#243447'}}>
       <View>
         <TouchableOpacity onPress={() => chooseFile(setCoverURI)}>
           <View
@@ -216,7 +217,7 @@ export default function UserUpdate(props) {
             marginTop: 10,
             paddingHorizontal: 10,
           }}>
-          <Text>Username</Text>
+          <Text style={{color: '#8899A6'}}>Username</Text>
           <TextInput
             value={username}
             placeholder="Cannot be blank"
@@ -226,6 +227,7 @@ export default function UserUpdate(props) {
               height: 40,
               borderBottomWidth: 1,
               borderBottomColor: BLUE,
+              color: 'white',
             }}
           />
         </View>
@@ -234,7 +236,7 @@ export default function UserUpdate(props) {
             marginTop: 10,
             paddingHorizontal: 10,
           }}>
-          <Text>Name</Text>
+          <Text style={{color: '#8899A6'}}>Name</Text>
           <TextInput
             value={name}
             placeholder="Cannot be blank"
@@ -244,6 +246,7 @@ export default function UserUpdate(props) {
               height: 40,
               borderBottomWidth: 1,
               borderBottomColor: BLUE,
+              color: 'white',
             }}
           />
         </View>
@@ -252,7 +255,7 @@ export default function UserUpdate(props) {
             marginTop: 15,
             paddingHorizontal: 10,
           }}>
-          <Text>Bio</Text>
+          <Text style={{color: '#8899A6'}}>Bio</Text>
           <TextInput
             value={bio}
             placeholder="Add a bio"
@@ -262,6 +265,7 @@ export default function UserUpdate(props) {
               height: 80,
               borderBottomWidth: 1,
               borderBottomColor: BLUE,
+              color: 'white',
             }}
             multiline={true}
             numberOfLines={5}
@@ -278,7 +282,7 @@ export default function UserUpdate(props) {
             marginTop: 15,
             paddingHorizontal: 10,
           }}>
-          <Text>Birth date</Text>
+          <Text style={{color: '#8899A6'}}>Birth date</Text>
           <TouchableOpacity
             onPress={() => setBirthModalVisible(true)}
             style={{
@@ -287,9 +291,10 @@ export default function UserUpdate(props) {
               borderBottomWidth: 1,
               justifyContent: 'flex-end',
               paddingVertical: 10,
+              color: 'white',
             }}>
             {birth ? (
-              <Text>{moment(birth).format('L')}</Text>
+              <Text style={{color: 'white'}}>{moment(birth).format('L')}</Text>
             ) : (
               <Text>add a date</Text>
             )}

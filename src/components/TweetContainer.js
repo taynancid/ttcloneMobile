@@ -15,13 +15,13 @@ export default function TweetContainer(props) {
     <View
       style={{
         flex: 1,
-        backgroundColor: '#AB947E',
+        backgroundColor: '#243447',
         minHeight: 70,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 5,
         borderBottomWidth: 1,
-        borderBottomColor: 'blue',
+        borderBottomColor: '#37444D',
       }}>
       <Image
         key={item.id}
@@ -35,15 +35,16 @@ export default function TweetContainer(props) {
           <Text
             style={{
               fontWeight: 'bold',
+              color: 'white',
             }}>
             {item.user.username}
           </Text>
-          <Text>
+          <Text style={{color: 'white'}}>
             {' '}
             @{item.user.username} · {moment(item.created_at).fromNow()}
           </Text>
         </View>
-        <Text style={{}}>{item.text}</Text>
+        <Text style={{color: 'white'}}>{item.text}</Text>
       </View>
     </View>
   );

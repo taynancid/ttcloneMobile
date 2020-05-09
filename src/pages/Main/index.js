@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {ScrollView, FlatList} from 'react-native';
 
 import {Container} from './styles';
@@ -10,12 +10,20 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import tweetListActions from '../../store/actions/tweetList';
 import {useDispatch, useSelector} from 'react-redux';
 
-// import { Container } from './styles';
-
 export default function Main(props) {
   const {tweetList, tweetListLoading} = useSelector(state => state.tweetList);
 
   const dispatch = useDispatch();
+
+  const navigationOptions = useCallback(({navigation}) => {
+    return {
+      headerShown: false,
+    };
+  }, []);
+
+  useEffect(() => {
+    props.navigation.setOptions(navigationOptions(props));
+  }, [props, navigationOptions]);
 
   useEffect(() => {
     dispatch(tweetListActions.fetchTweets());
@@ -24,6 +32,7 @@ export default function Main(props) {
   return (
     <>
       <Container>
+        <SafeAreaView />
         <FlatList
           data={tweetList}
           onRefresh={() => dispatch(tweetListActions.fetchTweets())}

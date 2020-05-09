@@ -7,7 +7,11 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 export default function BackArrowButton(props) {
   return (
     <TouchableOpacity onPress={props.onPress} style={{marginLeft: 10}}>
-      <FontAwesome5Icon name="arrow-left" size={20} color="#011F41" />
+      <FontAwesome5Icon
+        name="arrow-left"
+        size={20}
+        color={props.color ? props.color : '#1DA1F2'}
+      />
     </TouchableOpacity>
   );
 }

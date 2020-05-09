@@ -6,6 +6,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useSelector} from 'react-redux';
 import {useSafeArea} from 'react-native-safe-area-context';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import Text from './components/Text';
 
@@ -53,48 +54,36 @@ const Routes = () => {
         tabBarOptions={{
           activeTintColor: 'white',
           style: {
-            backgroundColor: '#011F41',
+            backgroundColor: '#243447',
             height: 50 + insets.bottom,
             paddingVertical: 3,
-            borderTopColor: 'rgba(0,0,0,0.2)',
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 2,
-              height: 5,
-            },
-            shadowOpacity: 0.75,
-            shadowRadius: 3.84,
-            elevation: 7,
+            borderTopColor: '#37444D',
           },
         }}>
         <Tabs.Screen
           name="Home"
           component={MainStackComponent}
           options={{
-            tabBarLabel: ({focused}) =>
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) =>
               focused ? (
-                <Text fontSize={15} color="white">
-                  Home
-                </Text>
-              ) : null,
-            tabBarIcon: () => (
-              <FontAwesome5Icon name="home" size={20} color="white" />
-            ),
+                <FontAwesome5Icon name="home" size={20} color="#1DA1F2" />
+              ) : (
+                <FontAwesome5Icon name="home" size={20} color="white" />
+              ),
           }}
         />
         <Tabs.Screen
           name="User"
           component={UserProfileStackComponent}
           options={{
-            tabBarLabel: ({focused}) =>
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) =>
               focused ? (
-                <Text fontSize={15} color="white">
-                  User
-                </Text>
-              ) : null,
-            tabBarIcon: () => (
-              <FontAwesome5Icon name="user" size={20} color="white" />
-            ),
+                <FontAwesomeIcon name="user" size={20} color="#1DA1F2" />
+              ) : (
+                <FontAwesomeIcon name="user-o" size={20} color="white" />
+              ),
           }}
         />
       </Tabs.Navigator>

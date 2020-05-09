@@ -38,13 +38,15 @@ const UserTimelineHeader = props => {
           style={{
             borderWidth: 1,
             borderRadius: 50,
-            borderColor: 'gray',
+            borderColor: '#1DA1F2',
             paddingVertical: 5,
             paddingHorizontal: 9,
             margin: 5,
           }}
           onPress={() => props.navigation.navigate('UserUpdateScreen')}>
-          <Text style={{fontWeight: 'bold', color: 'gray'}}>Edit profile</Text>
+          <Text style={{fontWeight: 'bold', color: '#1DA1F2'}}>
+            Edit profile
+          </Text>
         </TouchableOpacity>
       </View>
     </>
