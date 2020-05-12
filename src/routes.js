@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import UserUpdate from './pages/UserUpdate';
 import UserTimeline from './pages/UserTimeline';
 import AddTweet from './pages/AddTweet';
+import TweetDetails from './pages/TweetDetails';
 
 const Routes = () => {
   const {logged} = useSelector(state => state.auth);
@@ -32,6 +33,7 @@ const Routes = () => {
   const MainStackComponent = () => (
     <MainStack.Navigator>
       <MainStack.Screen name="Main" component={Main} />
+      <MainStack.Screen name="TweetDetailsScreen" component={TweetDetails} />
       {/* <MainStack.Screen name="AddTweetScreen" component={AddTweet} /> */}
     </MainStack.Navigator>
   );

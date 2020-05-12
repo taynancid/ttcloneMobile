@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, TouchableOpacity, SafeAreaView} from 'react-native';
+import {View, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
 import {ScrollView, FlatList} from 'react-native';
 
 import {Container} from './styles';
@@ -32,12 +32,13 @@ export default function Main(props) {
   return (
     <>
       <Container>
+        <StatusBar barStyle="light-content" />
         <SafeAreaView />
         <FlatList
           data={tweetList}
           onRefresh={() => dispatch(tweetListActions.fetchTweets())}
           refreshing={tweetListLoading}
-          renderItem={tweet => <TweetContainer tweet={tweet} />}
+          renderItem={tweet => <TweetContainer tweet={tweet} {...props} />}
           keyExtractor={item => item.id}
         />
         <TouchableOpacity

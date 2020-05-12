@@ -13,7 +13,6 @@ export default function TweetContainer(props) {
   const [likesCount, setLikesCount] = useState(item.likedBy.length);
 
   useEffect(() => {
-    console.log(item.user.avatar_url);
     item.likedBy.map(likedBy => {
       if (likedBy.id === user.data.id) {
         setLikedByUser(true);
@@ -38,7 +37,10 @@ export default function TweetContainer(props) {
   };
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() =>
+        props.navigation.navigate('TweetDetailsScreen', {tweet: item})
+      }
       style={{
         flex: 1,
         backgroundColor: '#243447',
@@ -95,6 +97,6 @@ export default function TweetContainer(props) {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
