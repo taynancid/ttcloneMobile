@@ -1,5 +1,6 @@
 import React, {useEffect, useCallback, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {useSelector} from 'react-redux';
 import moment from 'moment';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 
@@ -7,6 +8,7 @@ import BackArrowButton from '../../components/BackArrowButton';
 
 const TweetDetails = props => {
   const {tweet} = props.route.params;
+  const {user} = useSelector(state => state);
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(tweet.likedBy.length);
 
@@ -27,6 +29,14 @@ const TweetDetails = props => {
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
   }, [props, navigationOptions]);
+
+  useEffect(() => {
+    tweet.likedBy.map(likedBy => {
+      if (likedBy.id === user.data.id) {
+        setLikedByUser(true);
+      }
+    });
+  }, [tweet, user.data.id]);
 
   return (
     <View style={{flex: 1, backgroundColor: '#243447', padding: 10}}>
@@ -82,9 +92,12 @@ const TweetDetails = props => {
             marginTop: 15,
             justifyContent: 'space-around',
           }}>
-          <View>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate('AddTweetScreen', {tweetToReply: tweet})
+            }>
             <FontAwesomeIcons name="comment-o" size={20} color="#8899A6" />
-          </View>
+          </TouchableOpacity>
           <View
             style={{
               marginLeft: 20,
