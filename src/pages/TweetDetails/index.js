@@ -1,16 +1,19 @@
 import React, {useEffect, useCallback, useState} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 
+import api from '../../services/api';
 import BackArrowButton from '../../components/BackArrowButton';
+import TweetContainer from '../../components/TweetContainer';
 
 const TweetDetails = props => {
   const {tweet} = props.route.params;
   const {user} = useSelector(state => state);
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(tweet.likedBy.length);
+  const [comments, setComments] = useState([]);
 
   const navigationOptions = useCallback(({navigation}) => {
     return {
@@ -26,6 +29,15 @@ const TweetDetails = props => {
     };
   }, []);
 
+  const fetchComments = useCallback(async () => {
+    try {
+      const {data} = await api.get(`reply/${tweet.id}`);
+      setComments(data);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
   }, [props, navigationOptions]);
@@ -36,7 +48,9 @@ const TweetDetails = props => {
         setLikedByUser(true);
       }
     });
-  }, [tweet, user.data.id]);
+
+    fetchComments();
+  }, [fetchComments, tweet, user.data.id]);
 
   return (
     <View style={{flex: 1, backgroundColor: '#243447', padding: 10}}>
@@ -92,12 +106,20 @@ const TweetDetails = props => {
             marginTop: 15,
             justifyContent: 'space-around',
           }}>
-          <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate('AddTweetScreen', {tweetToReply: tweet})
-            }>
-            <FontAwesomeIcons name="comment-o" size={20} color="#8899A6" />
-          </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <TouchableOpacity
+              onPress={() =>
+                props.navigation.navigate('AddTweetScreen', {
+                  tweetToReply: tweet,
+                })
+              }>
+              <FontAwesomeIcons name="comment-o" size={20} color="#8899A6" />
+              <Text>{comments.lenght}</Text>
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               marginLeft: 20,
@@ -114,6 +136,16 @@ const TweetDetails = props => {
             <Text style={{color: likedByUser ? 'red' : '#8899A6'}} />
           </View>
         </View>
+      </View>
+      <View
+        style={{marginTop: 20, borderTopWidth: 1, borderTopColor: '#37444D'}}>
+        <FlatList
+          data={comments}
+          refreshing={false}
+          onRefresh={() => fetchComments()}
+          renderItem={comment => <TweetContainer tweet={comment} {...props} />}
+          keyExtractor={item => item.id}
+        />
       </View>
     </View>
   );
