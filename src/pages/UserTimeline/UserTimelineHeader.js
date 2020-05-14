@@ -4,11 +4,16 @@ import {useSelector, useDispatch} from 'react-redux';
 
 // import { Container } from './styles';
 
+const HEADER_HEIGHT = 160;
+
 const UserTimelineHeader = props => {
   const {user} = useSelector(state => state);
 
   return (
-    <>
+    <View
+      style={{
+        height: HEADER_HEIGHT,
+      }}>
       <Image
         style={{
           width: '100%',
@@ -19,8 +24,8 @@ const UserTimelineHeader = props => {
       <View
         style={{
           position: 'absolute',
+          top: HEADER_HEIGHT / 2,
           left: 10,
-          top: 120,
         }}>
         <Image
           style={{
@@ -49,7 +54,7 @@ const UserTimelineHeader = props => {
           </Text>
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
 

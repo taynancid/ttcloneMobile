@@ -11,6 +11,7 @@ export default function TweetContainer(props) {
   const {user} = useSelector(state => state);
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(item.likedBy.length);
+  const [commentsCount, setCommentsCount] = useState(item.replies.length);
 
   useEffect(() => {
     item.likedBy.map(likedBy => {
@@ -75,7 +76,10 @@ export default function TweetContainer(props) {
         <Text style={{color: 'white'}}>{item.text}</Text>
         <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 5}}>
           <View>
-            <FontAwesomeIcons name="comment-o" size={15} color="#8899A6" />
+            <Text>
+              <FontAwesomeIcons name="comment-o" size={15} color="#8899A6" />
+              <Text style={{color: '#8899A6'}}> {commentsCount}</Text>
+            </Text>
           </View>
           <View
             style={{

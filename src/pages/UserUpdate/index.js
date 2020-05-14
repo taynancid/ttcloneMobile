@@ -20,6 +20,8 @@ import userActions from '../../store/actions/user';
 
 const BLUE = '#428AF8';
 const LIGHT_GRAY = '#D3D3D3';
+const HEADER_HEIGHT = 160;
+const AVATAR_HEIGHT = 80;
 
 export default function UserUpdate(props) {
   const {user} = useSelector(state => state);
@@ -148,12 +150,12 @@ export default function UserUpdate(props) {
           <View
             style={{
               width: '100%',
-              height: 120,
+              height: HEADER_HEIGHT,
             }}>
             <ImageBackground
               style={{
                 width: '100%',
-                height: 120,
+                height: HEADER_HEIGHT - AVATAR_HEIGHT / 2,
                 backgroundColor: 'rgb(0,0,0)',
               }}
               imageStyle={{opacity: 0.4}}
@@ -162,7 +164,7 @@ export default function UserUpdate(props) {
                 style={{
                   flexDirection: 'column',
                   alignItems: 'center',
-                  top: 50,
+                  top: HEADER_HEIGHT / 3,
                 }}>
                 <MaterialIconsIcons
                   name="add-a-photo"
@@ -177,7 +179,7 @@ export default function UserUpdate(props) {
           style={{
             position: 'absolute',
             left: 10,
-            top: 80,
+            top: AVATAR_HEIGHT,
             backgroundColor: 'white',
             borderRadius: 50,
           }}

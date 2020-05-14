@@ -17,6 +17,7 @@ import UserUpdate from './pages/UserUpdate';
 import UserTimeline from './pages/UserTimeline';
 import AddTweet from './pages/AddTweet';
 import TweetDetails from './pages/TweetDetails';
+import Find from './pages/Find';
 
 const Routes = () => {
   const {logged} = useSelector(state => state.auth);
@@ -36,6 +37,13 @@ const Routes = () => {
       <MainStack.Screen name="TweetDetailsScreen" component={TweetDetails} />
       {/* <MainStack.Screen name="AddTweetScreen" component={AddTweet} /> */}
     </MainStack.Navigator>
+  );
+
+  const FindStack = createStackNavigator();
+  const FindStackComponent = () => (
+    <FindStack.Navigator>
+      <FindStack.Screen name="FindScreen" component={Find} />
+    </FindStack.Navigator>
   );
 
   const UserProfileStack = createStackNavigator();
@@ -72,6 +80,19 @@ const Routes = () => {
                 <FontAwesome5Icon name="home" size={20} color="#1DA1F2" />
               ) : (
                 <FontAwesome5Icon name="home" size={20} color="white" />
+              ),
+          }}
+        />
+        <Tabs.Screen
+          name="Find"
+          component={FindStackComponent}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) =>
+              focused ? (
+                <FontAwesome5Icon name="search" size={20} color="#1DA1F2" />
+              ) : (
+                <FontAwesome5Icon name="search" size={20} color="white" />
               ),
           }}
         />

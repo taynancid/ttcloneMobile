@@ -36,7 +36,7 @@ const TweetDetails = props => {
     } catch (e) {
       console.log(e);
     }
-  });
+  }, [tweet.id]);
 
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
@@ -82,11 +82,11 @@ const TweetDetails = props => {
         </Text>
         <View
           style={{
-            borderTopWidth: 0.2,
-            borderBottomWidth: 0.2,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
             marginTop: 15,
-            borderBottomColor: '#8899A6',
-            borderTopColor: '#8899A6',
+            borderBottomColor: '#37444D',
+            borderTopColor: '#37444D',
             paddingVertical: 10,
           }}>
           <Text
@@ -101,9 +101,8 @@ const TweetDetails = props => {
         <View
           style={{
             flexDirection: 'row',
-            paddingBottom: 10,
             paddingTop: 5,
-            marginTop: 15,
+            marginTop: 5,
             justifyContent: 'space-around',
           }}>
           <View
@@ -117,7 +116,6 @@ const TweetDetails = props => {
                 })
               }>
               <FontAwesomeIcons name="comment-o" size={20} color="#8899A6" />
-              <Text>{comments.lenght}</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -138,7 +136,7 @@ const TweetDetails = props => {
         </View>
       </View>
       <View
-        style={{marginTop: 20, borderTopWidth: 1, borderTopColor: '#37444D'}}>
+        style={{marginTop: 10, borderTopWidth: 1, borderTopColor: '#37444D'}}>
         <FlatList
           data={comments}
           refreshing={false}
