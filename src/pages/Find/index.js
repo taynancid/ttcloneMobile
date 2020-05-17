@@ -1,9 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TextInput} from 'react-native';
+import {View, TextInput, FlatList} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import api from '../../services/api';
+import {useDispatch, useSelector} from 'react-redux';
+import userListActions from '../../store/actions/userList';
+import UserContainer from '../../components/UserContainer';
 
 const Find = props => {
   const [searchText, setSearchText] = useState('');
+  const {userList, userListLoading} = useSelector(state => state.userList);
+
+  const dispatch = useDispatch();
 
   const navigationOptions = useCallback(({navigation}) => {
     return {
@@ -14,6 +21,10 @@ const Find = props => {
   useEffect(() => {
     props.navigation.setOptions(navigationOptions(props));
   }, [navigationOptions, props]);
+
+  useEffect(() => {
+    dispatch(userListActions.fetchUsers());
+  }, [dispatch]);
 
   return (
     <View style={{flex: 1, backgroundColor: '#243447'}}>
@@ -33,6 +44,13 @@ const Find = props => {
           }}
           value={searchText}
           onChangeText={setSearchText}
+        />
+        <FlatList
+          data={userList}
+          onRefresh={() => dispatch(userListActions.fetchTweets())}
+          refreshing={userListLoading}
+          renderItem={user => <UserContainer userData={user} {...props} />}
+          keyExtractor={item => item.id}
         />
       </SafeAreaView>
     </View>
