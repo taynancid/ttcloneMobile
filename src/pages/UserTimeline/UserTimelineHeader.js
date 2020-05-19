@@ -1,13 +1,26 @@
 import React from 'react';
 import {View, SafeAreaView, Image, Text, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import EntypoIcons from 'react-native-vector-icons/Entypo';
 import {useSelector, useDispatch} from 'react-redux';
 
-// import { Container } from './styles';
+import authActions from '../../store/actions/auth';
 
 const HEADER_HEIGHT = 160;
 
 const UserTimelineHeader = props => {
   const {user} = useSelector(state => state);
+
+  const dispatch = useDispatch();
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('@ttclone:token');
+      dispatch(authActions.logOut());
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View
@@ -39,20 +52,29 @@ const UserTimelineHeader = props => {
         />
       </View>
       <View alignItems="flex-end">
-        <TouchableOpacity
+        <View
           style={{
-            borderWidth: 1,
-            borderRadius: 50,
-            borderColor: '#1DA1F2',
-            paddingVertical: 5,
-            paddingHorizontal: 9,
-            margin: 5,
-          }}
-          onPress={() => props.navigation.navigate('UserUpdateScreen')}>
-          <Text style={{fontWeight: 'bold', color: '#1DA1F2'}}>
-            Edit profile
-          </Text>
-        </TouchableOpacity>
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity onPress={logout}>
+            <EntypoIcons name="log-out" size={20} color="#1DA1F2" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderRadius: 50,
+              borderColor: '#1DA1F2',
+              paddingVertical: 5,
+              paddingHorizontal: 9,
+              margin: 5,
+            }}
+            onPress={() => props.navigation.navigate('UserUpdateScreen')}>
+            <Text style={{fontWeight: 'bold', color: '#1DA1F2'}}>
+              Edit profile
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

@@ -12,8 +12,6 @@ import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import UserTimelineHeader from './UserTimelineHeader';
 import moment from 'moment';
 
-// import { Container } from './styles';
-
 export default function UserTimeline(props) {
   const user = useSelector(state => state.user);
 
