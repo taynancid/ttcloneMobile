@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import moment from 'moment';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
@@ -8,15 +8,19 @@ import {useSelector} from 'react-redux';
 export default function TweetContainer(props) {
   const {item} = props.userData;
   const {user} = useSelector(state => state);
-  const [isFollowing, setIsFollowing] = useState(checkIsFollowing);
+  const [isFollowing, setIsFollowing] = useState(false);
 
-  const checkIsFollowing = () => {
+  useEffect(() => {
+    checkIsFollowing();
+  }, [checkIsFollowing]);
+
+  const checkIsFollowing = useCallback(() => {
     const isAlreadyFollowing = item.followers.find(
       element => element.id === user.data.id,
     );
 
-    return !!isAlreadyFollowing;
-  };
+    return setIsFollowing(!!isAlreadyFollowing);
+  }, [item.followers, user.data.id]);
 
   const handleFollow = async idToFollow => {
     try {
