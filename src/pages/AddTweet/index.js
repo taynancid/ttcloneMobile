@@ -14,11 +14,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import api from '../../services/api';
 import tweetListActions from '../../store/actions/tweetList';
 
-const AddTweet = props => {
+const AddTweet = ({navigation, route}) => {
   const user = useSelector(state => state.user);
   const [tweetText, setTweetText] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
-  const {tweetToReply} = props.route.params;
+  const [tweetToReply] = useState(
+    route.params?.tweetToReply ? route.params?.tweetToReply : null,
+  );
 
   const dispatch = useDispatch();
 
@@ -34,7 +36,7 @@ const AddTweet = props => {
         const {data} = await api.post('tweets', {text: tweetText});
       }
       dispatch(tweetListActions.fetchTweets());
-      props.navigation.goBack();
+      navigation.goBack();
       setCreateLoading(false);
     } catch (e) {
       setCreateLoading(false);
@@ -52,7 +54,7 @@ const AddTweet = props => {
           alignItems: 'center',
           marginHorizontal: 10,
         }}>
-        <TouchableOpacity onPress={() => props.navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome5Icons name="times" size={25} color={'#1DA1F2'} />
         </TouchableOpacity>
         <TouchableOpacity

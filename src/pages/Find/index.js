@@ -45,9 +45,10 @@ const Find = props => {
           value={searchText}
           onChangeText={setSearchText}
         />
+
         <FlatList
           data={userList}
-          onRefresh={() => dispatch(userListActions.fetchTweets())}
+          onRefresh={() => dispatch(userListActions.fetchUsers())}
           refreshing={userListLoading}
           renderItem={user => <UserContainer userData={user} {...props} />}
           keyExtractor={item => item.id}
