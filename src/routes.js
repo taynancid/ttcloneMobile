@@ -8,10 +8,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
-import Text from './components/Text';
-
 import Main from './pages/Main';
-import User from './pages/User';
 import Login from './pages/Login';
 import UserUpdate from './pages/UserUpdate';
 import UserTimeline from './pages/UserTimeline';

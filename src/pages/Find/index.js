@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TextInput, FlatList} from 'react-native';
+import {View, TextInput, FlatList, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import api from '../../services/api';
 import {useDispatch, useSelector} from 'react-redux';
 import userListActions from '../../store/actions/userList';
 import UserContainer from '../../components/UserContainer';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Find = props => {
   const [searchText, setSearchText] = useState('');
@@ -26,25 +27,50 @@ const Find = props => {
     dispatch(userListActions.fetchUsers());
   }, [dispatch]);
 
+  const handleSearch = () => {
+    dispatch(userListActions.fetchUsers(searchText.toLowerCase()));
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: '#243447'}}>
       <SafeAreaView>
-        <TextInput
+        <View
           style={{
-            borderRadius: 50,
-            backgroundColor: '#10171F',
-            alignSelf: 'stretch',
+            flexDirection: 'row',
+            width: '100%',
             marginBottom: 15,
-            fontSize: 15,
             marginHorizontal: '20%',
             marginTop: 25,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            color: 'white',
-          }}
-          value={searchText}
-          onChangeText={setSearchText}
-        />
+          }}>
+          <TextInput
+            style={{
+              borderRadius: 50,
+              backgroundColor: '#10171F',
+              alignSelf: 'stretch',
+              fontSize: 15,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              color: 'white',
+              width: '50%',
+              marginRight: 10,
+            }}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+          <TouchableOpacity
+            disabled={userListLoading}
+            style={{
+              backgroundColor: '#1DA1F2',
+              width: 30,
+              height: 30,
+              borderRadius: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={handleSearch}>
+            <FontAwesome5Icon name="search" size={15} color="white" />
+          </TouchableOpacity>
+        </View>
 
         <FlatList
           data={userList}

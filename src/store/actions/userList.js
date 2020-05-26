@@ -10,10 +10,10 @@ export const setUserListLoading = data => ({
   payload: data,
 });
 
-export const fetchUsers = () => async dispatch => {
+export const fetchUsers = (searchText = '') => async dispatch => {
   try {
     dispatch(setUserListLoading(true));
-    const {data} = await api.get('users', {});
+    const {data} = await api.get('users', {params: {searchText}});
     dispatch(setUserList([...data]));
     dispatch(setUserListLoading(false));
   } catch (e) {
